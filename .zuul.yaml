@@ -3,7 +3,7 @@
     name: ansible-role-zookeeper
     run: tests/playbooks/run.yaml
     roles:
-      - zuul: openstack/ansible-role-zookeeper
+      - zuul: windmill/ansible-role-zookeeper
 
 - job:
     name: ansible-role-zookeeper-fedora-latest
