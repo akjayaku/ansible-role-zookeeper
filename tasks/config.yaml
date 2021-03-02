@@ -42,6 +42,9 @@
   with_items:
     - /etc/zookeeper
     - /etc/zookeeper/conf
+    - /etc/zookeeper/ca
+    - /etc/zookeeper/ca/certs
+    - /etc/zookeeper/ca/keystores
     - /var/log/zookeeper
 
 - name: Install zookeeper log4j.properties
@@ -53,6 +56,26 @@
     owner: "{{ zookeeper_file_log4j_properties_owner }}"
     src: "{{ zookeeper_file_log4j_properties_src }}"
   register: zookeeper_file_log4j_properties
+
+- name: Install zookeeper ssl truststore configuration
+  become: true
+  template:
+    dest: "{{ zookeeper_file_ssl_truststore_dest }}"
+    group: "{{ zookeeper_file_ssl_truststore_group }}"
+    mode: "{{ zookeeper_file_ssl_truststore_mode }}"
+    owner: "{{ zookeeper_file_ssl_truststore_owner }}"
+    src: "{{ zookeeper_file_ssl_truststore_src }}"
+  register: zookeeper_file_ssl_truststore
+
+- name: Install zookeeper ssl keystore configuration
+  become: true
+  template:
+    dest: "{{ zookeeper_file_ssl_keystore_dest }}"
+    group: "{{ zookeeper_file_ssl_keystore_group }}"
+    mode: "{{ zookeeper_file_ssl_keystore_mode }}"
+    owner: "{{ zookeeper_file_ssl_keystore_owner }}"
+    src: "{{ zookeeper_file_ssl_keystore_src }}"
+  register: zookeeper_file_ssl_keystore
 
 - name: Install zookeeper myid
   become: yes

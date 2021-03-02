@@ -23,7 +23,37 @@
     - name: Assert results are registered.
       assert:
         that:
+          - zookeeper_file_ssl_keystore
+          - zookeeper_file_ssl_truststore
           - zookeeper_service_zookeeper
+
+    - name: Register /etc/zookeeper/ca/certs/cacert.pem
+      stat:
+        path: /etc/zookeeper/ca/certs/cacert.pem
+      register: _zookeeper_file_ssl_truststore_stat
+
+    - name: Assert _zookeeper_file_ssl_truststore_stat tests.
+      assert:
+        that:
+          - _zookeeper_file_ssl_truststore_stat.stat.exists
+          - _zookeeper_file_ssl_truststore_stat.stat.isreg
+          - _zookeeper_file_ssl_truststore_stat.stat.pw_name == 'zookeeper'
+          - _zookeeper_file_ssl_truststore_stat.stat.gr_name == 'zookeeper'
+          - _zookeeper_file_ssl_truststore_stat.stat.mode == '0644'
+
+    - name: Register /etc/zookeeper/ca/keystores/server.pem
+      stat:
+        path: /etc/zookeeper/ca/keystores/server.pem
+      register: _zookeeper_file_ssl_keystore_stat
+
+    - name: Assert _zookeeper_file_ssl_keystore_stat tests.
+      assert:
+        that:
+          - _zookeeper_file_ssl_keystore_stat.stat.exists
+          - _zookeeper_file_ssl_keystore_stat.stat.isreg
+          - _zookeeper_file_ssl_keystore_stat.stat.pw_name == 'zookeeper'
+          - _zookeeper_file_ssl_keystore_stat.stat.gr_name == 'zookeeper'
+          - _zookeeper_file_ssl_keystore_stat.stat.mode == '0600'
 
     - name: Ensure zookeeper is running.
       become: yes

@@ -40,6 +40,20 @@ zookeeper_file_zoo_conf_group: zookeeper
 zookeeper_file_zoo_conf_mode: 0644
 zookeeper_file_zoo_conf_owner: zookeeper
 
+zookeeper_file_ssl_truststore_content:
+zookeeper_file_ssl_truststore_dest: /etc/zookeeper/ca/certs/cacert.pem
+zookeeper_file_ssl_truststore_group: "{{ zookeeper_user_group }}"
+zookeeper_file_ssl_truststore_mode: 0644
+zookeeper_file_ssl_truststore_owner: "{{ zookeeper_user_name }}"
+zookeeper_file_ssl_truststore_src: etc/zookeeper/ca/certs/cacert.pem
+
+zookeeper_file_ssl_keystore_content:
+zookeeper_file_ssl_keystore_dest: /etc/zookeeper/ca/keystores/server.pem
+zookeeper_file_ssl_keystore_group: "{{ zookeeper_user_group }}"
+zookeeper_file_ssl_keystore_mode: 0600
+zookeeper_file_ssl_keystore_owner: "{{ zookeeper_user_name }}"
+zookeeper_file_ssl_keystore_src: etc/zookeeper/ca/keystores/server.pem
+
 # tasks/install.yaml
 zookeeper_package_state: present
 
