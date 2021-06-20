@@ -1,13 +1,21 @@
 ---
 - job:
-    name: ansible-role-zookeeper
+    name: ansible-role-zookeeper-base
     run: tests/playbooks/run.yaml
     roles:
       - zuul: windmill/ansible-role-zookeeper
 
 - job:
+    name: ansible-role-zookeeper-tarball
+    parent: ansible-role-zookeeper-base
+    nodeset: ubuntu-bionic
+    vars:
+      zookeeper_install_method: tarball
+      zookeeper_tarball_version: 3.5.9
+
+- job:
     name: ansible-role-zookeeper-ubuntu-bionic
-    parent: ansible-role-zookeeper
+    parent: ansible-role-zookeeper-base
     nodeset: ubuntu-bionic
 
 - project:
@@ -15,9 +23,11 @@
       - windmill-jobs-bionic
     check:
       jobs:
+        - ansible-role-zookeeper-tarball
         - ansible-role-zookeeper-ubuntu-bionic
         - tox-linters
     gate:
       jobs:
+        - ansible-role-zookeeper-tarball
         - ansible-role-zookeeper-ubuntu-bionic
         - tox-linters

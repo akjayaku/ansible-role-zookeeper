@@ -14,11 +14,18 @@
 ---
 # tasks/main.yaml
 zookeeper_task_manager:
+  - pre
   - install
   - config
   - service
 
 # tasks/config.yaml
+zookeeper_user_name: zookeeper
+zookeeper_user_group: zookeeper
+zookeeper_user_home: /var/lib/zookeeper
+zookeeper_user_home_mode: 0750
+# zookeeper_user_shell:
+
 zookeeper_file_myid_group: zookeeper
 zookeeper_file_myid_mode: 0644
 zookeeper_file_myid_owner: zookeeper
@@ -32,7 +39,29 @@ zookeeper_package_state: present
 
 zookeeper_install_method: package
 
+zookeeper_tarball_creates: "{{ zookeeper_tarball_dest }}/apache-zookeeper-{{ zookeeper_tarball_version }}-bin"
+zookeeper_tarball_dest: "/opt/tarballs"
+zookeeper_tarball_remote_src: true
+zookeeper_tarball_src: "https://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_tarball_version }}/apache-zookeeper-{{ zookeeper_tarball_version }}-bin.tar.gz"
+zookeeper_tarball_symlink: /opt/zookeeper
+zookeeper_tarball_version:
+
 # tasks/service.yaml
+zookeeper_file_zookeeper_service_dest: /etc/systemd/system/zookeeper.service
+zookeeper_file_zookeeper_service_group: root
+zookeeper_file_zookeeper_service_manage: true
+zookeeper_file_zookeeper_service_mode: 0644
+zookeeper_file_zookeeper_service_owner: root
+zookeeper_file_zookeeper_service_src: etc/systemd/system/zookeeper.service
+
+zookeeper_file_zookeeper_service_config_dest: /etc/systemd/system/zookeeper.service.d/override.conf
+zookeeper_file_zookeeper_service_config_group: root
+zookeeper_file_zookeeper_service_config_manage: true
+zookeeper_file_zookeeper_service_config_mode: 0644
+zookeeper_file_zookeeper_service_config_owner: root
+zookeeper_file_zookeeper_service_config_src: etc/systemd/system/zookeeper.service.d/override.conf
+
+zookeeper_service_zookeeper_daemon_reload: true
 zookeeper_service_zookeeper_enabled: yes
 zookeeper_service_zookeeper_manage: true
 zookeeper_service_zookeeper_name: zookeeper

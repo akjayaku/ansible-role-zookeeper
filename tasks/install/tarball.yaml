@@ -1,0 +1,60 @@
+# Copyright 2021 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+---
+- name: Ensure java is present
+  become: true
+  package:
+    name: default-jre-headless
+    state: present
+
+- name: Create required directory
+  become: true
+  file:
+    path: "{{ zookeeper_tarball_dest }}"
+    state: directory
+
+- name: Ensure zookeeper is present
+  become: true
+  unarchive:
+    creates: "{{ zookeeper_tarball_creates }}"
+    dest: "{{ zookeeper_tarball_dest }}"
+    remote_src: "{{ zookeeper_tarball_remote_src }}"
+    src: "{{ zookeeper_tarball_src }}"
+
+- name: Stat zookeeper_tarball_symlink
+  stat:
+    path: "{{ zookeeper_tarball_symlink | dirname }}"
+  register: r
+  no_log: true
+  when: zookeeper_tarball_symlink is defined
+
+- name: Create zookeeper_tarball_symlink directory
+  become: true
+  file:
+    state: directory
+    path: "{{ zookeeper_tarball_symlink | dirname }}"
+  when:
+    - zookeeper_tarball_symlink is defined
+    - not r.stat.exists
+
+- name: Symlink zookeeper tarball
+  become: true
+  file:
+    dest: "{{ zookeeper_tarball_symlink }}"
+    src: "{{ zookeeper_tarball_creates }}"
+    state: link
+  when:
+    - zookeeper_tarball_creates is defined
+    - zookeeper_tarball_symlink is defined
+    - zookeeper_tarball_creates != zookeeper_tarball_symlink

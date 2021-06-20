@@ -32,6 +32,18 @@
     zookeeper_file_zoo_conf_src: "{{ __zookeeper_file_zoo_conf_src }}"
   when: zookeeper_file_zoo_conf_src is not defined
 
+- name: Create required directories
+  become: true
+  file:
+    group: "{{ zookeeper_user_group }}"
+    owner: "{{ zookeeper_user_name }}"
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/zookeeper
+    - /etc/zookeeper/conf
+    - /var/log/zookeeper
+
 - name: Install zookeeper myid
   become: yes
   template:

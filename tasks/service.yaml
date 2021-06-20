@@ -12,6 +12,40 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 ---
+- name: Install systemd files
+  block:
+    - name: Install zookeeper service script into place
+      become: true
+      template:
+        dest: "{{ zookeeper_file_zookeeper_service_dest }}"
+        group: "{{ zookeeper_file_zookeeper_service_group }}"
+        mode: "{{ zookeeper_file_zookeeper_service_mode }}"
+        owner: "{{ zookeeper_file_zookeeper_service_owner }}"
+        src: "{{ zookeeper_file_zookeeper_service_src }}"
+      register: zookeeper_file_zookeeper_service
+      when: zookeeper_file_zookeeper_service_manage
+
+    - name: Create zookeeper service config directory
+      become: true
+      file:
+        group: "{{ zookeeper_file_zookeeper_service_config_group }}"
+        owner: "{{ zookeeper_file_zookeeper_service_config_owner }}"
+        path: "{{ zookeeper_file_zookeeper_service_dest }}.d"
+        state: directory
+      when: zookeeper_file_zookeeper_service_config_manage
+
+    - name: Install zookeeper service config into place
+      become: true
+      template:
+        dest: "{{ zookeeper_file_zookeeper_service_config_dest  }}"
+        group: "{{ zookeeper_file_zookeeper_service_config_group  }}"
+        mode: "{{ zookeeper_file_zookeeper_service_config_mode  }}"
+        owner: "{{ zookeeper_file_zookeeper_service_config_owner  }}"
+        src: "{{ zookeeper_file_zookeeper_service_config_src  }}"
+      register: zookeeper_file_zookeeper_service_config
+      when: zookeeper_file_zookeeper_service_config_manage
+  when: zookeeper_install_method != 'package'
+
 - name: Enable zookeeper service
   become: yes
   service:
@@ -20,3 +54,14 @@
     state: "{{ zookeeper_service_zookeeper_state }}"
   register: zookeeper_service_zookeeper
   when: zookeeper_service_zookeeper_manage
+
+- name: Set zookeeper service state
+  become: true
+  systemd:
+    daemon_reload: "{{ zookeeper_service_zookeeper_daemon_reload }}"
+    name: "{{ zookeeper_service_zookeeper_name }}"
+    state: "{{ zookeeper_service_zookeeper_state }}"
+  register: zookeeper_service_zookeeper_state_info
+  when:
+    - zookeeper_service_zookeeper_manage
+    - zookeeper_service_zookeeper_state in ['reloaded', 'restarted', 'started', 'stopped']
