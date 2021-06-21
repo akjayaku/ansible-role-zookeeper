@@ -26,6 +26,12 @@ zookeeper_user_home: /var/lib/zookeeper
 zookeeper_user_home_mode: 0750
 # zookeeper_user_shell:
 
+zookeeper_file_log4j_properties_dest: /etc/zookeeper/conf/log4j.properties
+zookeeper_file_log4j_properties_group: zookeeper
+zookeeper_file_log4j_properties_mode: 0644
+zookeeper_file_log4j_properties_owner: zookeeper
+zookeeper_file_log4j_properties_src: etc/zookeeper/conf/log4j.properties
+
 zookeeper_file_myid_group: zookeeper
 zookeeper_file_myid_mode: 0644
 zookeeper_file_myid_owner: zookeeper

@@ -44,6 +44,16 @@
     - /etc/zookeeper/conf
     - /var/log/zookeeper
 
+- name: Install zookeeper log4j.properties
+  become: yes
+  template:
+    dest: "{{ zookeeper_file_log4j_properties_dest }}"
+    group: "{{ zookeeper_file_log4j_properties_group }}"
+    mode: "{{ zookeeper_file_log4j_properties_mode }}"
+    owner: "{{ zookeeper_file_log4j_properties_owner }}"
+    src: "{{ zookeeper_file_log4j_properties_src }}"
+  register: zookeeper_file_log4j_properties
+
 - name: Install zookeeper myid
   become: yes
   template:
